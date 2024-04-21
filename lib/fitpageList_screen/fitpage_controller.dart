@@ -39,7 +39,7 @@ class FitpageController extends GetxController{
 
 
   navigationToNextPage({required int index}){
-    Get.toNamed(AppRoutes.fitPageDetailsScreen,arguments:[{'criteria':fitPageListModel[index].criteria},{'name':fitPageListModel[index].name},{'tag':fitPageListModel[index].tag},{'color':fitPageListModel[index].color}] );
+    Get.offAllNamed(AppRoutes.fitPageDetailsScreen,arguments:[{'criteria':fitPageListModel[index].criteria},{'name':fitPageListModel[index].name},{'tag':fitPageListModel[index].tag},{'color':fitPageListModel[index].color}] );
   }
 
 

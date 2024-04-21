@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -49,8 +51,9 @@ class FitPageDetails extends GetView<FitPageDetailsController>{
                   itemCount: controller.criteria.length,
                 itemBuilder: (BuildContext context,int index){
                     return Container(
-                      child: Text(controller.criteria[index].text??"",
-                          style:  const TextStyle(color: Colors.white,fontSize: 18 )),
+                      alignment: Alignment.topLeft,
+                      child:buildTextWithClickableSpecialChars(controller.criteria[index].text??"",index), /*Text(controller.criteria[index].text??"",
+                            style:  const TextStyle(color: Colors.white,fontSize: 18 ))*/
                     );
                 },
               )
@@ -61,4 +64,51 @@ class FitPageDetails extends GetView<FitPageDetailsController>{
     );
   }
 
+  Widget buildTextWithClickableSpecialChars(String text,index) {
+    List<Widget> widgets = [];
+    RegExp regExp = RegExp(r'\$(\d+)');
+    Iterable<Match> matches = regExp.allMatches(text);
+    int lastMatchEnd = 0;
+    for (Match match in matches) {
+      widgets.add(Text(
+        text.substring(lastMatchEnd, match.start),
+        overflow: TextOverflow.fade,
+        style:  TextStyle(
+          color: Colors.white,
+          fontSize: 12,
+          decoration: TextDecoration.underline,
+        ),
+      ));
+      widgets.add(GestureDetector(
+        onTap: () {
+          // Handle click action here
+          controller.navigationNextPage(clickedData:match.group(1).toString(), index: index );
+          print("Clicked on: ${match.group(1)}");
+        },
+        child: Text(
+          '{${match.group(0)}}',
+          style: TextStyle(
+            color: Colors.blue,
+            fontSize: 12,
+            decoration: TextDecoration.underline,
+          ),
+        ),
+      ));
+      lastMatchEnd = match.end;
+    }
+    widgets.add(Text(
+      text.substring(lastMatchEnd),
+      style:  TextStyle(
+        color: Colors.white,
+        fontSize: 12,
+        decoration: TextDecoration.underline,
+      ),
+    ));
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: widgets,
+      ),
+    );
+  }
 }
